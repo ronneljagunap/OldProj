@@ -26,6 +26,8 @@ namespace IngredientChecklist.Controllers
         [HttpPost]
         public JsonResult InsertIngredient(Ingredient ingredient)
         {
+            if (string.IsNullOrEmpty(ingredient.Name))
+                return null;
             using (IngredientChecklistEntities entities = new IngredientChecklistEntities())
             {
                 int RecipeID = Convert.ToInt32(Session["RecipeID"]);
