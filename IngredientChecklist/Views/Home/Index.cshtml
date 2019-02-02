@@ -1,0 +1,14 @@
+﻿
+@{
+    ViewBag.Title = "Home Page";
+}
+<br />
+<ul class="nav nav-tabs">
+    <li class="active">
+        <a data-toggle="tab" href="#firsttab">Recipes</a></li class="active">
+        <li><a data-toggle="tab" href="#secondtab">Cook</a></li>
+</ul>
+<div class="tab-content">
+    <div id="firsttab" class="tab-pane in active">@Html.Action("Recipe", "Recipe")</div>
+    <div id="secondtab" class="tab-pane in">@Html.Action("Index", "Checklist")</div>
+</div>

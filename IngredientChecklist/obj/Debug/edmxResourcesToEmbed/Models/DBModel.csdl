@@ -1,0 +1,71 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="DBModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityType Name="Ingredient">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Name" Type="String" MaxLength="1000" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="IsChecked" Type="Boolean" />
+    <Property Name="RecipeId" Type="Int32" Nullable="false" />
+    <NavigationProperty Name="Recipe" Relationship="Self.FK_Ingredient_Recipe" FromRole="Ingredient" ToRole="Recipe" />
+  </EntityType>
+  <EntityType Name="Recipe">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Name" Type="String" MaxLength="500" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="UserId" Type="Int32" Nullable="false" />
+    <NavigationProperty Name="Ingredients" Relationship="Self.FK_Ingredient_Recipe" FromRole="Recipe" ToRole="Ingredient" />
+    <NavigationProperty Name="User" Relationship="Self.FK_Recipe_User" FromRole="Recipe" ToRole="User" />
+  </EntityType>
+  <EntityType Name="User">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="FullName" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="UserName" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="Password" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="Guid" Type="Guid" Nullable="false" />
+    <NavigationProperty Name="Recipes" Relationship="Self.FK_Recipe_User" FromRole="User" ToRole="Recipe" />
+  </EntityType>
+  <Association Name="FK_Ingredient_Recipe">
+    <End Role="Recipe" Type="Self.Recipe" Multiplicity="1" />
+    <End Role="Ingredient" Type="Self.Ingredient" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Recipe">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Ingredient">
+        <PropertyRef Name="RecipeId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Recipe_User">
+    <End Role="User" Type="Self.User" Multiplicity="1" />
+    <End Role="Recipe" Type="Self.Recipe" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="User">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Recipe">
+        <PropertyRef Name="UserId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="IngredientChecklistEntities" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="Ingredients" EntityType="Self.Ingredient" />
+    <EntitySet Name="Recipes" EntityType="Self.Recipe" />
+    <EntitySet Name="Users" EntityType="Self.User" />
+    <AssociationSet Name="FK_Ingredient_Recipe" Association="Self.FK_Ingredient_Recipe">
+      <End Role="Recipe" EntitySet="Recipes" />
+      <End Role="Ingredient" EntitySet="Ingredients" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Recipe_User" Association="Self.FK_Recipe_User">
+      <End Role="User" EntitySet="Users" />
+      <End Role="Recipe" EntitySet="Recipes" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>

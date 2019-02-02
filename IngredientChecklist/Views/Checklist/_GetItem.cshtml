@@ -1,0 +1,93 @@
+﻿@model IEnumerable<IngredientChecklist.Models.Ingredient>
+
+<table class="table" id="tblIngredient">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Name)
+        </th>
+        <th>
+            <input type="button" onclick="checkAll(this)" value="Reset" class="btn btn-secondary btn-sm">
+        </th>
+        @*<th>
+                @Html.DisplayNameFor(model => model.RecipeId)
+            </th>*@
+        @*<th>
+            </th>*@
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td class="Id" style="display: none; width: 30px;">
+                <span>@item.Id</span>
+                <input type="text" value="@item.Id" style="display:none" />
+            </td>
+            <td class="Name">
+                <span>@item.Name</span>
+                <input type="text" value="@item.Name" style="display:none" />
+            </td>
+            <td>
+                @Html.CheckBox("IsChecked", Convert.ToBoolean(item.IsChecked), new { @class = "mycheckBox" })
+            </td>
+
+        </tr>
+    }
+
+</table>
+
+
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+<script type="text/javascript" src="http://ajax.cdnjs.com/ajax/libs/json2/20110223/json2.js"></script>
+<script type="text/javascript">
+
+
+    function checkAll(bx) {
+        //if (confirm("Do you want to update all ingredients?")) {
+        var cbs = document.getElementsByTagName('input');
+        for (var i = 0; i < cbs.length; i++) {
+            if (cbs[i].type == 'checkbox') {
+                cbs[i].checked = bx.checked;
+
+                var row = $(cbs[i]).closest("tr");
+
+                var ingredient = {};
+                ingredient.Id = row.find(".Id").find("span").html();
+                ingredient.IsChecked = bx.checked;
+
+                $.ajax({
+                    type: "POST",
+                    url: "/Checklist/UpdateIngredient",
+                    data: '{ingredient:' + JSON.stringify(ingredient) + '}',
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json"
+                });
+
+            }
+            //}
+        }
+
+    }
+
+    $(function () {
+
+        $("input.mycheckBox").change(function () {
+            //if (confirm("Do you want to update this ingredient?")) {
+            var row = $(this).closest("tr");
+            //var Id = row.find("span").html();
+            var isSelected = this.checked;
+
+            var ingredient = {};
+            ingredient.Id = row.find(".Id").find("span").html();
+            ingredient.IsChecked = isSelected;
+            $.ajax({
+                type: "POST",
+                url: "/Checklist/UpdateIngredient",
+                data: '{ingredient:' + JSON.stringify(ingredient) + '}',
+                contentType: "application/json; charset=utf-8",
+                dataType: "json"
+            });
+            //}
+
+        });
+    });
+</script>

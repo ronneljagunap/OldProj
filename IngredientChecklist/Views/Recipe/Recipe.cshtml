@@ -1,0 +1,61 @@
+﻿@model IEnumerable<IngredientChecklist.Models.Recipe>
+
+@{
+    ViewBag.Title = "Recipe";
+    Layout = null;
+}
+
+<h2>Recipe</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create", null, new { @class = "btn btn-primary btn-sm" })
+</p>
+<table class="table table-striped table-condensed" id="employeeTable">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Name)
+        </th>
+        @*<th>
+                @Html.DisplayNameFor(model => model.UserId)
+            </th>*@
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            @*<td>
+                    @Html.DisplayFor(modelItem => item.UserId)
+                </td>*@
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
+                @Html.ActionLink("Ingredients", "Ingredients", new { id = item.Id, name = item.Name })
+                @*@Html.ActionLink("Cook", "Cook", new { id = item.Id, name = item.Name })*@
+            </td>
+        </tr>
+    }
+
+</table>
+
+
+<link href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css" rel="stylesheet" />
+@section scripts{
+    @Scripts.Render("~/bundles/jqueryval")
+
+    <script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+
+
+    <script>
+        function activatejQueryTable() {
+            $("#employeeTable").DataTable();
+        }
+
+        $(function () {
+            activatejQueryTable();
+        });
+
+    </script>
+}

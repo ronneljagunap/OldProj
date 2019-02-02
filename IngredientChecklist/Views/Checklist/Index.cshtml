@@ -1,0 +1,38 @@
+﻿@model IEnumerable<IngredientChecklist.Models.Ingredient>
+
+@{
+    ViewBag.Title = "Checklist";
+    Layout = null;
+}
+
+<br />
+<div class="dropdown">
+    @Html.DropDownList("id", (List<SelectListItem>)ViewBag.Recipes, "--Select Recipe--", new { @onchange = "CallChangefunc(this.value)", @class = "select2_demo_4 form-control" })
+</div>
+<br />
+
+<div id="myPartialView">
+    @{Html.RenderPartial("_GetItem", Model);}
+</div>
+
+<script>
+
+    function CallChangefunc(id) {
+        debugger
+        if (id == "")
+            id = 0;
+
+        $.ajax({
+            url: "@Url.Action("GetItem", "Checklist")",
+            data: { id: id },
+            type: "Get",
+            dataType: "html",
+            success: function (data) {
+                console.log(data);
+                //Whatever result you have got from your controller with html partial view replace with a specific html.
+                $("#myPartialView").html(data); // HTML DOM replace
+            }
+        });
+    }
+
+</script>
